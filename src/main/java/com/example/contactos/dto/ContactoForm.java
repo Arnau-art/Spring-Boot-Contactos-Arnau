@@ -26,6 +26,9 @@ public class ContactoForm {
     @NotNull(message = "Selecciona una provincia.")
     private Integer provinciaId;
 
+    @NotNull(message = "Selecciona un país.")
+    private Integer paisId;
+
     public Integer getId() {
         return id;
     }
@@ -65,4 +68,13 @@ public class ContactoForm {
     public void setProvinciaId(Integer provinciaId) {
         this.provinciaId = provinciaId;
     }
+
+    public Integer getPaisId() {
+        return paisId;
+    }
+
+    public void setPaisId(Integer paisId) {
+        this.paisId = paisId;
+    }
+
 }

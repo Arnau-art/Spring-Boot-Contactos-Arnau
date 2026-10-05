@@ -38,6 +38,7 @@
                             <th>Teléfono</th>
                             <th>Email</th>
                             <th>Provincia</th>
+                            <th>País</th>
                             <th><span class="sr-only">Acciones</span></th>
                         </tr>
                     </thead>
@@ -48,6 +49,7 @@
                             </td>
                             <td data-label="Email"><a th:href="'mailto:' + ${c.email}" th:text="${c.email}"></a></td>
                             <td data-label="Provincia"><span class="badge" th:text="${c.provincia.nombre}"></span></td>
+                            <td data-label="País"><span class="badge" th:text="${c.pais.nombre}"></span></td>
                             <td class="table__actions">
                                 <a class="btn btn--ghost btn--sm"
                                     th:href="@{/contactos/{id}/editar(id=${c.id})}">Editar</a>

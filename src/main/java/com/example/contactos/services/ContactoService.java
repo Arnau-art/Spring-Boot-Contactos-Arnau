@@ -2,8 +2,10 @@ package com.example.contactos.services;
 
 import com.example.contactos.dto.ContactoForm;
 import com.example.contactos.entity.Contacto;
+import com.example.contactos.entity.Pais;
 import com.example.contactos.entity.Provincia;
 import com.example.contactos.repository.ContactoRepository;
+import com.example.contactos.repository.PaisRepository;
 import com.example.contactos.repository.ProvinciaRepository;
 import java.util.List;
 import java.util.Optional;
@@ -18,11 +20,14 @@ public class ContactoService {
 
     private final ContactoRepository contactoRepository;
     private final ProvinciaRepository provinciaRepository;
+    private final PaisRepository paisRepository;
 
     public ContactoService(ContactoRepository contactoRepository,
-            ProvinciaRepository provinciaRepository) {
+            ProvinciaRepository provinciaRepository,
+            PaisRepository paisRepository) {
         this.contactoRepository = contactoRepository;
         this.provinciaRepository = provinciaRepository;
+        this.paisRepository = paisRepository;
     }
 
     @Transactional(readOnly = true)
@@ -36,6 +41,11 @@ public class ContactoService {
     }
 
     @Transactional(readOnly = true)
+    public List<Pais> listarPaises() {
+        return paisRepository.findAll(Sort.by("nombre"));
+    }
+
+    @Transactional(readOnly = true)
     public boolean existe(Integer id) {
         return contactoRepository.existsById(id);
     }
@@ -43,6 +53,11 @@ public class ContactoService {
     @Transactional(readOnly = true)
     public boolean provinciaExiste(Integer id) {
         return provinciaRepository.existsById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public boolean paisExiste(Integer id) {
+        return id != null && paisRepository.existsById(id);
     }
 
     @Transactional(readOnly = true)
@@ -61,6 +76,7 @@ public class ContactoService {
             form.setTelefono(c.getTelefono());
             form.setEmail(c.getEmail());
             form.setProvinciaId(c.getProvincia().getId());
+            form.setPaisId(c.getPais() != null ? c.getPais().getId() : null);
             return form;
         });
     }
@@ -75,6 +91,7 @@ public class ContactoService {
         contacto.setTelefono(form.getTelefono());
         contacto.setEmail(form.getEmail());
         contacto.setProvincia(provinciaRepository.getReferenceById(form.getProvinciaId()));
+        contacto.setPais(paisRepository.getReferenceById(form.getPaisId()));
         return contactoRepository.save(contacto);
     }
 
@@ -92,12 +109,13 @@ public class ContactoService {
     @Transactional(readOnly = true)
     public byte[] exportarCsv() {
         StringBuilder csv = new StringBuilder("\uFEFF"); // BOM para que Excel respete las tildes
-        csv.append("Nombre;Teléfono;Email;Provincia\r\n");
+        csv.append("Nombre;Teléfono;Email;Provincia;País\r\n");
         for (Contacto c : contactoRepository.findAllByOrderByNombreAsc()) {
             csv.append(celdaCsv(c.getNombre())).append(';')
                     .append(celdaCsv(c.getTelefono())).append(';')
                     .append(celdaCsv(c.getEmail())).append(';')
-                    .append(celdaCsv(c.getProvincia().getNombre())).append("\r\n");
+                    .append(celdaCsv(c.getProvincia().getNombre())).append(';')
+                    .append(celdaCsv(c.getPais() != null ? c.getPais().getNombre() : "")).append("\r\n");
         }
         return csv.toString().getBytes(StandardCharsets.UTF_8);
     }

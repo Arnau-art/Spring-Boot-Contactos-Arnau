@@ -31,6 +31,10 @@ public class Contacto {
     @JoinColumn(name = "provincia_id", nullable = false)
     private Provincia provincia;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "pais_id", nullable = false) // ← ESTO ES LO NUEVO
+    private Pais pais;
+
     public Integer getId() {
         return id;
     }
@@ -66,4 +70,13 @@ public class Contacto {
     public void setProvincia(Provincia provincia) {
         this.provincia = provincia;
     }
+
+    public Pais getPais() {
+        return pais;
+    }
+
+    public void setPais(Pais pais) {
+        this.pais = pais;
+    }
+
 }

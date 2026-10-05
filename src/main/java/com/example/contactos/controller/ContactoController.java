@@ -43,6 +43,7 @@ public class ContactoController {
     public String nuevo(Model model) {
         model.addAttribute("contactoForm", new ContactoForm());
         model.addAttribute("provincias", contactoService.listarProvincias());
+        model.addAttribute("paises", contactoService.listarPaises());
         return VISTA_FORMULARIO;
     }
 
@@ -76,6 +77,7 @@ public class ContactoController {
                 .map(form -> {
                     model.addAttribute("contactoForm", form);
                     model.addAttribute("provincias", contactoService.listarProvincias());
+                    model.addAttribute("paises", contactoService.listarPaises());
                     return VISTA_FORMULARIO;
                 })
                 .orElseGet(() -> noEncontrado(redirect));
@@ -92,8 +94,11 @@ public class ContactoController {
         validarReglasDeNegocio(form, result);
         if (result.hasErrors()) {
             model.addAttribute("provincias", contactoService.listarProvincias());
+            model.addAttribute("paises", contactoService.listarPaises());
             return VISTA_FORMULARIO;
+
         }
+
         Contacto guardado = contactoService.guardar(form);
         redirect.addFlashAttribute("exito", "Contacto «" + guardado.getNombre() + "» actualizado correctamente.");
         return REDIRECT_LISTA;
@@ -115,6 +120,9 @@ public class ContactoController {
         }
         if (!result.hasFieldErrors("provinciaId") && !contactoService.provinciaExiste(form.getProvinciaId())) {
             result.rejectValue("provinciaId", "provincia.invalida", "La provincia seleccionada no existe.");
+        }
+        if (!result.hasFieldErrors("paisId") && !contactoService.paisExiste(form.getPaisId())) {
+            result.rejectValue("paisId", "pais.invalido", "El país seleccionado no existe.");
         }
     }
 
