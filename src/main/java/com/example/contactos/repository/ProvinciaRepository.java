@@ -1,7 +1,8 @@
-package com.example.contactos.Repository;
+package com.example.contactos.repository;
 
-import com.example.contactos.Entity.Provincia;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.example.contactos.entity.Provincia;
 
 public interface ProvinciaRepository extends JpaRepository<Provincia, Integer> {
 }

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(titulo)">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title th:text="${titulo} + ' · Agenda postal'">Agenda postal</title>
+    <script>
+        (function () {
+            var tema = null;
+            try { tema = localStorage.getItem('tema'); } catch (e) { }
+            if (tema !== 'dark' && tema !== 'light') {
+                tema = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+            }
+            document.documentElement.setAttribute('data-theme', tema);
+        })();
+    </script>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <script th:src="@{/js/app.js}" defer></script>
+</head>
+
+<body>
+
+    <button th:fragment="selectorTema" type="button" class="theme-toggle" data-tema-toggle
+        aria-label="Cambiar entre modo claro y oscuro" title="Cambiar tema">
+        <span class="theme-toggle__icon" aria-hidden="true"></span>
+    </button>
+
+    <header class="navbar" th:fragment="navbar(activo)">
+        <div class="navbar__inner">
+            <a class="navbar__brand" th:href="@{/contactos}">
+                <span class="navbar__logo" aria-hidden="true">✉</span> Agenda Postal
+            </a>
+            <button class="navbar__toggle" type="button" aria-label="Abrir menú" aria-expanded="false"
+                data-menu-toggle>☰</button>
+            <nav class="navbar__menu" data-menu>
+                <a class="nav-link" th:href="@{/contactos}"
+                    th:classappend="${activo == 'lista'} ? 'is-active'">Contactos</a>
+                <a class="nav-link" th:href="@{/contactos/nuevo}"
+                    th:classappend="${activo == 'nuevo'} ? 'is-active'">Añadir contacto</a>
+                <a class="nav-link" th:href="@{/usuarios/nuevo}"
+                    th:classappend="${activo == 'usuario'} ? 'is-active'">Nuevo usuario</a>
+                <div class="navbar__user">
+                    <th:block th:replace="~{fragments/layout :: selectorTema}"></th:block>
+                    <span th:text="${usuarioActual}">Usuario</span>
+                    <form th:action="@{/logout}" method="post">
+                        <button type="submit" class="btn btn--ghost btn--sm">Cerrar sesión</button>
+                    </form>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div th:fragment="mensajes">
+        <div class="alert alert--success" role="status" th:if="${exito}" th:text="${exito}"></div>
+        <div class="alert alert--error" role="alert" th:if="${error}" th:text="${error}"></div>
+    </div>
+
+</body>
+
+</html>

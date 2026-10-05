@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Error')}"></head>
+
+<body>
+    <main class="auth">
+        <div class="card auth__card">
+            <h1>Algo ha salido mal</h1>
+            <p class="muted" th:text="${status} + ' · ' + ${error}">404 · Not Found</p>
+            <a class="btn btn--primary btn--block" th:href="@{/contactos}">Volver al listado</a>
+        </div>
+    </main>
+</body>
+
+</html>

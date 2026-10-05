@@ -1,8 +1,9 @@
-package com.example.contactos.Controller;
+package com.example.contactos.controller;
 
-import com.example.contactos.Repository.ContactoRepository;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.example.contactos.repository.ContactoRepository;
 
 @RestController
 public class PruebaController {

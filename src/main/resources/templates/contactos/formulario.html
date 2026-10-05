@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head(${contactoForm.id == null ? 'Nuevo contacto' : 'Editar contacto'})}">
+</head>
+
+<body>
+    <header th:replace="~{fragments/layout :: navbar(${contactoForm.id == null ? 'nuevo' : 'lista'})}"></header>
+
+    <main class="container container--narrow">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <div class="page-header">
+            <h1 th:text="${contactoForm.id == null} ? 'Nuevo contacto' : 'Editar contacto'">Contacto</h1>
+        </div>
+
+        <div class="card">
+            <form th:object="${contactoForm}"
+                th:action="${contactoForm.id == null} ? @{/contactos/nuevo} : @{/contactos/{id}/editar(id=${contactoForm.id})}"
+                method="post" novalidate data-cargando>
+
+                <div class="alert alert--error" role="alert" th:if="${#fields.hasErrors('*')}">
+                    Revisa los campos marcados en rojo.
+                </div>
+
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input class="input" type="text" id="nombre" maxlength="255" th:field="*{nombre}"
+                        th:classappend="${#fields.hasErrors('nombre')} ? 'is-invalid'" autofocus>
+                    <p class="field-error" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input class="input" type="tel" id="telefono" maxlength="15" th:field="*{telefono}"
+                        th:classappend="${#fields.hasErrors('telefono')} ? 'is-invalid'">
+                    <p class="field-error" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input class="input" type="email" id="email" maxlength="255" th:field="*{email}"
+                        th:classappend="${#fields.hasErrors('email')} ? 'is-invalid'">
+                    <p class="field-error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="provinciaId">Provincia</label>
+                    <select class="input" id="provinciaId" th:field="*{provinciaId}"
+                        th:classappend="${#fields.hasErrors('provinciaId')} ? 'is-invalid'">
+                        <option value="">Selecciona una provincia</option>
+                        <option th:each="p : ${provincias}" th:value="${p.id}" th:text="${p.nombre}"></option>
+                    </select>
+                    <p class="field-error" th:if="${#fields.hasErrors('provinciaId')}" th:errors="*{provinciaId}"></p>
+                </div>
+
+                <div class="form-actions">
+                    <a class="btn btn--secondary" th:href="@{/contactos}">Cancelar</a>
+                    <button type="submit" class="btn btn--primary" data-texto-cargando="Guardando…">Guardar</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card danger-zone" th:if="${contactoForm.id != null}">
+            <div>
+                <h2>Eliminar contacto</h2>
+                <p class="muted">Se borrará de forma permanente.</p>
+            </div>
+            <button type="button" class="btn btn--danger" data-abrir-dialogo="dlg-eliminar">Eliminar</button>
+        </div>
+    </main>
+
+    <dialog id="dlg-eliminar" th:if="${contactoForm.id != null}" aria-labelledby="dlg-titulo">
+        <div class="dialog__body">
+            <h2 id="dlg-titulo">¿Eliminar este contacto?</h2>
+            <p>Vas a eliminar a <strong th:text="${contactoForm.nombre}">este contacto</strong>.
+                Esta acción no se puede deshacer.</p>
+        </div>
+        <form class="dialog__actions" method="post" data-cargando
+            th:action="@{/contactos/{id}/eliminar(id=${contactoForm.id})}">
+            <button type="button" class="btn btn--secondary" data-cerrar-dialogo>Cancelar</button>
+            <button type="submit" class="btn btn--danger" data-texto-cargando="Eliminando…">Sí, eliminar</button>
+        </form>
+    </dialog>
+</body>
+
+</html>

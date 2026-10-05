@@ -1,4 +1,4 @@
-package com.example.contactos.Entity;
+package com.example.contactos.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

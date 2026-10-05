@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Contactos')}"></head>
+
+<body>
+    <header th:replace="~{fragments/layout :: navbar('lista')}"></header>
+
+    <main class="container">
+        <div th:replace="~{fragments/layout :: mensajes}"></div>
+
+        <div class="page-header">
+            <div>
+                <h1>Contactos</h1>
+                <p class="muted">
+                    <span data-contador th:text="${#lists.size(contactos)}">0</span>
+                    de <span th:text="${#lists.size(contactos)}">0</span> contactos
+                </p>
+            </div>
+            <div class="page-header__actions">
+                <a class="btn btn--secondary" th:if="${!#lists.isEmpty(contactos)}" th:href="@{/contactos/exportar}"
+                    data-exportar>⬇ Exportar CSV</a>
+                <a class="btn btn--primary" th:href="@{/contactos/nuevo}">+ Añadir contacto</a>
+            </div>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(contactos)}">
+            <div class="toolbar">
+                <input class="input" type="search" data-filtro
+                    placeholder="Buscar por nombre, teléfono, email o provincia…" aria-label="Buscar contactos">
+            </div>
+
+            <div class="card card--flush">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Teléfono</th>
+                            <th>Email</th>
+                            <th>Provincia</th>
+                            <th><span class="sr-only">Acciones</span></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="c : ${contactos}">
+                            <td data-label="Nombre" class="table__name" th:text="${c.nombre}"></td>
+                            <td data-label="Teléfono"><a th:href="'tel:' + ${c.telefono}" th:text="${c.telefono}"></a>
+                            </td>
+                            <td data-label="Email"><a th:href="'mailto:' + ${c.email}" th:text="${c.email}"></a></td>
+                            <td data-label="Provincia"><span class="badge" th:text="${c.provincia.nombre}"></span></td>
+                            <td class="table__actions">
+                                <a class="btn btn--ghost btn--sm"
+                                    th:href="@{/contactos/{id}/editar(id=${c.id})}">Editar</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p class="muted sin-resultados" hidden data-sin-resultados>Ningún contacto coincide con la búsqueda.</p>
+        </div>
+
+        <div class="card empty" th:if="${#lists.isEmpty(contactos)}">
+            <p class="empty__title">Todavía no hay contactos</p>
+            <p class="muted">Añade el primero para empezar.</p>
+            <a class="btn btn--primary" th:href="@{/contactos/nuevo}">+ Añadir contacto</a>
+        </div>
+    </main>
+</body>
+
+</html>
