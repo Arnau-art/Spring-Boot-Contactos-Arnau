@@ -1,6 +1,6 @@
-package Repository;
+package com.example.contactos.Repository;
 
-import Entity.User;
+import com.example.contactos.Entity.User;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
